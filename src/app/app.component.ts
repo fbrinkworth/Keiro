@@ -7,6 +7,9 @@ import { AngularFire } from 'angularfire2';
 
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
+import { ResetPasswordPage } from '../pages/reset-password/reset-password';
+
+import { AuthData } from '../providers/auth-data';
 
 @Component({
   templateUrl: 'app.html'
@@ -18,7 +21,7 @@ export class MyApp {
 
   pages: Array<{ title: string, component: any }>;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public af: AngularFire) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, public af: AngularFire, public authData: AuthData) {
 
     const authObserver = af.auth.subscribe(user => {
       if (user) {
@@ -31,6 +34,12 @@ export class MyApp {
     });
 
     this.initializeApp();
+
+    // used for an example of ngFor and navigation
+    this.pages = [
+      { title: 'Home', component: HomePage }
+    ];
+
   }
 
   initializeApp() {
@@ -46,5 +55,11 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
+  }
+
+  logout() {
+    this.authData.logoutUser().then(() => {
+        this.rootPage = LoginPage;      
+    });
   }
 }
